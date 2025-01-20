@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messenger Group Name Lock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Lock Messenger Group Name</h2>
+        <form id="lockForm">
+            <label for="groupId">Group ID</label>
+            <input type="text" id="groupId" placeholder="Enter Messenger Group ID" required>
+            <label for="accessToken">Access Token</label>
+            <input type="text" id="accessToken" placeholder="Enter Access Token" required>
+            <label for="lockedName">Locked Name</label>
+            <input type="text" id="lockedName" placeholder="Enter Desired Group Name" required>
+            <button type="submit">Lock Name</button>
+        </form>
+        <p id="response" style="color: green;"></p>
+    </div>
+    <script>
+        document.getElementById('lockForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const groupId = document.getElementById('groupId').value;
+            const accessToken = document.getElementById('accessToken').value;
+            const lockedName = document.getElementById('lockedName').value;
+
+            const responseElement = document.getElementById('response');
+
+            try {
+                const response = await fetch('/lock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ groupId, accessToken, lockedName }),
+                });
+
+                const data = await response.json();
+                responseElement.textContent = data.message || 'Group name locked successfully!';
+            } catch (error) {
+                responseElement.style.color = 'red';
+                responseElement.textContent = 'An error occurred. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html>
